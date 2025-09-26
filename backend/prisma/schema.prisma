@@ -1,15 +1,77 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma"
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
+
+model Usuario {
+  id       Int      @id @default(autoincrement())
+  nombre   String
+  email    String   @unique
+  password String
+  rol      UserRole   @default(cliente) // cliente o admin
+  pedidos  Pedido[]
+}
+
+enum UserRole {
+  cliente
+  empleado
+  admin
+}
+
+model Categoria {
+  id        Int        @id @default(autoincrement())
+  nombre    String
+  productos Producto[]
+}
+
+model Producto {
+  id          Int            @id @default(autoincrement())
+  nombre      String
+  precio      Float
+  categoriaId Int
+  categoria   Categoria      @relation(fields: [categoriaId], references: [id])
+  detalles    DetallePedido[]
+}
+
+model Pedido {
+  id        Int             @id @default(autoincrement())
+  fecha     DateTime        @default(now())
+  estado    String          @default("pendiente") // pendiente, confirmado, entregado, cancelado
+  total     Float           @default(0.0)
+  usuarioId Int
+  usuario   Usuario         @relation(fields: [usuarioId], references: [id])
+  detalles  DetallePedido[]
+  factura   Factura?
+}
+
+model DetallePedido {
+  id         Int      @id @default(autoincrement())
+  pedidoId   Int
+  productoId Int
+  cantidad   Int
+  subtotal   Float
+  pedido     Pedido   @relation(fields: [pedidoId], references: [id])
+  producto   Producto @relation(fields: [productoId], references: [id])
+}
+
+model MedioPago {
+  id       Int       @id @default(autoincrement())
+  tipo     String    // tarjeta, efectivo, transferencia, etc.
+  detalles String?   // últimos dígitos tarjeta, alias CBU, etc.
+  facturas Factura[]
+}
+
+model Factura {
+  id           Int       @id @default(autoincrement())
+  fecha        DateTime  @default(now())
+  total        Float
+  pedidoId     Int       @unique
+  metodoPagoId Int
+  pedido       Pedido    @relation(fields: [pedidoId], references: [id])
+  metodoPago   MedioPago @relation(fields: [metodoPagoId], references: [id])
+}
+
