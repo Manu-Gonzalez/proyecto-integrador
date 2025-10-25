@@ -1,3 +1,9 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -7,71 +13,78 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Usuario {
-  id       Int      @id @default(autoincrement())
-  nombre   String
-  email    String   @unique
-  password String
-  rol      UserRole   @default(cliente) // cliente o admin
-  pedidos  Pedido[]
+model Client {
+  id         String   @id @default(uuid())
+  firstName  String
+  lastName   String
+  email      String   @unique
+  dni        String   @unique
+  cityId     String
+  city       City     @relation(fields: [cityId], references: [city_id])
+  address    String
+  registerAt DateTime @default(now())
+  Pedido     Pedido[]
 }
 
-enum UserRole {
-  cliente
-  empleado
-  admin
+model City {
+  city_id  String   @id @default(uuid())
+  cityName String
+  Client   Client[]
+}
+
+model User {
+  id        String    @id @default(uuid())
+  username  String    @unique
+  password  String
+  createdAt DateTime  @default(now())
+  Session   Session[]
+}
+
+model Session {
+  id               String   @id @default(uuid())
+  userId           String
+  device           String
+  ip               String?
+  refreshTokenHash String
+  expiresAt        DateTime
+  isValid          Boolean  @default(false)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id])
 }
 
 model Categoria {
-  id        Int        @id @default(autoincrement())
-  nombre    String
+  id        String     @id @default(uuid())
+  nombre    String     @db.VarChar(30)
   productos Producto[]
 }
 
 model Producto {
-  id          Int            @id @default(autoincrement())
-  nombre      String
-  precio      Float
-  categoriaId Int
-  categoria   Categoria      @relation(fields: [categoriaId], references: [id])
-  detalles    DetallePedido[]
+  id             String           @id @default(uuid())
+  nombre         String           @db.VarChar(40)
+  precio_unidad  Float            @db.Float
+  id_categoria   String
+  categoria      Categoria        @relation(fields: [id_categoria], references: [id])
+  PedidoProducto PedidoProducto[]
 }
 
 model Pedido {
-  id        Int             @id @default(autoincrement())
-  fecha     DateTime        @default(now())
-  estado    String          @default("pendiente") // pendiente, confirmado, entregado, cancelado
-  total     Float           @default(0.0)
-  usuarioId Int
-  usuario   Usuario         @relation(fields: [usuarioId], references: [id])
-  detalles  DetallePedido[]
-  factura   Factura?
+  id             String           @id @default(uuid())
+  status         Boolean          @default(false)
+  createdAt      DateTime         @default(now())
+  total          Decimal          @default(0)
+  clientId       String
+  Client         Client           @relation(fields: [clientId], references: [id])
+  PedidoProducto PedidoProducto[]
 }
 
-model DetallePedido {
-  id         Int      @id @default(autoincrement())
-  pedidoId   Int
-  productoId Int
+model PedidoProducto {
+  id         String @id @default(uuid())
+  productoId String
+  pedidoId   String
   cantidad   Int
-  subtotal   Float
-  pedido     Pedido   @relation(fields: [pedidoId], references: [id])
-  producto   Producto @relation(fields: [productoId], references: [id])
-}
 
-model MedioPago {
-  id       Int       @id @default(autoincrement())
-  tipo     String    // tarjeta, efectivo, transferencia, etc.
-  detalles String?   // últimos dígitos tarjeta, alias CBU, etc.
-  facturas Factura[]
+  Pedido   Pedido   @relation(fields: [pedidoId], references: [id])
+  Producto Producto @relation(fields: [productoId], references: [id])
 }
-
-model Factura {
-  id           Int       @id @default(autoincrement())
-  fecha        DateTime  @default(now())
-  total        Float
-  pedidoId     Int       @unique
-  metodoPagoId Int
-  pedido       Pedido    @relation(fields: [pedidoId], references: [id])
-  metodoPago   MedioPago @relation(fields: [metodoPagoId], references: [id])
-}
-

@@ -1,77 +1,56 @@
-# Backend
 
-Este proyecto backend está configurado con TypeScript, utiliza path-aliases y sigue la Arquitectura Limpia (Clean Architecture) con patrón Repository e inyección de dependencias.
+# Evaluacion backend
 
-## Arquitectura Limpia
+## Actividad
 
-El proyecto está estructurado en capas siguiendo los principios de Clean Architecture:
+Diseñe un sistema de ventas mediante pedidos que pueda manejar productos, pedidos y clientes, aplicando impuestos, descuentos y calculando el total.
 
-### Capas
+El sistema de ventas y clientes solo deberia poder ser accedido por alguien autenticado, mientras que a la lista de los productos deberia poder acceder cualquier persona que quisice consultar los productos a la venta. El sistema de autenticacion deberia ser manejado unicamente por el backend mediante cookies y JWT.
 
-- **Domain**: Contiene las entidades de negocio y reglas de negocio puras. No depende de frameworks externos.
-  - `entities/`: Interfaces o clases que representan entidades del dominio (ej. User).
-  - `repositories/`: Interfaces para el acceso a datos (patrón Repository).
+Se evaluara si siguio las formas y estructura del proyecto, ademas de cumplir con los requisitos y los tests ya hechos.
 
-- **Application**: Contiene los casos de uso (Use Cases) que orquestan la lógica de aplicación.
-  - `use-cases/`: Clases que implementan la lógica de negocio, inyectando repositories.
-  - `services/`: Servicios de aplicación si es necesario.
 
-- **Infrastructure**: Implementaciones concretas de las interfaces definidas en Domain.
-  - `database/`: Configuración de base de datos.
-  - `repositories/`: Implementaciones de repositories (ej. con Prisma).
+## Conocimientos a aplicar
 
-- **Presentation**: Adaptadores de entrada (controladores, rutas) para Express.
-  - `controllers/`: Controladores que manejan las solicitudes HTTP.
-  - `routes/`: Definición de rutas y middlewares.
+- Desarrollo de una API REST con Express.
+- Conocimientos en Typescript relacionados a path alias, tipado fuerte, programacion orientada a objetos.
+- Patrones de diseño como repositorio e inyeccion de dependencias.
+- Arquitectura de proyectos.
+- Autenticacion mediante JWT y cookies.
+- Uso de librerias externas.
+- Conexion a base de datos y uso de ORM.
+- Aplicacion de los principios SOLID (S) responsabilidad unica, (O) abierto a extension cerrado a modificacion, (L) principio de sustitucion, (I) segregacion de interfaces (D) inversion de dependencias.
+- Paginacion de datos.
+- Extension y manejo de errores.
 
-- **Shared**: Utilidades compartidas por todas las capas.
-  - `types/`: Tipos TypeScript compartidos.
-  - `utils/`: Funciones utilitarias.
-  - `container.ts`: Configuración del contenedor de inyección de dependencias.
 
-### Dependencias
+## Detalles importantes
 
-Las dependencias fluyen hacia adentro: Presentation → Application → Domain ← Infrastructure.
+El proyecto ya tiene las configuraciones basicas de express, typescript, vitest y un contenedor de dependencias basico, esto con el objetivo de no perder el tiempo. Ademas cuenta con una estructura definida, algunos tests de funcionalidad y un modulo de clientes que solo tiene un endpoint para devolver una lista de clientes.
 
-## Path-Aliases
+Algunas partes del proyecto contaran con comentarios que aportan consejos sobre algunas practicas y recomendaciones a la hora de llevar adelante un proyecto.
 
-- `@/*`: Apunta a la raíz del proyecto (./*)
-- `@domain/*`: Capa Domain (./src/domain/*)
-- `@application/*`: Capa Application (./src/application/*)
-- `@infrastructure/*`: Capa Infrastructure (./src/infrastructure/*)
-- `@presentation/*`: Capa Presentation (./src/presentation/*)
-- `@shared/*`: Capa Shared (./src/shared/*)
+A la hora de hacer un pedido se debe devolver el total de la posible venta, para ello, por ley, se tiene que devolver el total de la venta y cuanto de esa venta es IVA, ademas a los clientes que esten registrados desde x tiempo se les aplica un descuento sobre el total de la venta luego del IVA.
 
-### Ejemplo de uso
 
-```typescript
-import type { User } from '@domain/entities/user';
-import { CreateUserUseCase } from '@application/use-cases/create-user-use-case';
-import { PrismaUserRepository } from '@infrastructure/repositories/prisma-user-repository';
-```
+## Requisitos de la aplicacion
 
-## Inyección de Dependencias
+- Sistema de autenticacion que pueda
+	1. Registrar un usuario (empleado).
+	2. Autenticar un usuario.
+	3. Verificar quien accede a la aplicacion y limitar su acceso.
 
-Se utiliza `tsyringe` para inyección de dependencias. Los servicios se registran en `src/shared/container.ts`.
+- Un modulo que se encargue de manejar productos. Con las siguientes funcionalidades.
+	1. Listar productos con paginado sin autenticacion.
+	2. Agregar productos si se esta autenticado.
+	3. Eliminar productos si se esta autenticado.
+	4. Editar productos estando autenticado.
 
-Ejemplo de uso en un controlador:
+- Funcionalidad para obtener detalles de un cliente especifico y sus pedidos pendientes.
 
-```typescript
-@injectable()
-export class UserController {
-  constructor(
-    @inject('CreateUserUseCase') private createUserUseCase: CreateUserUseCase
-  ) {}
-}
-```
-
-## Scripts
-
-- `pnpm run dev`: Ejecuta el proyecto en modo desarrollo con tsx.
-- `pnpm run build`: Compila el proyecto a JavaScript.
-- `pnpm run start`: Ejecuta el proyecto compilado.
-
-## Configuración
-
-- `tsconfig.json`: Configurado con `baseUrl`, `paths`, decorators habilitados y módulos ESM.
-- `package.json`: Configurado como módulo ESM con `type: "module"`.
+- Modulo para el manejo de los pedidos accesible unicamente con autenticacion. Debera tener las siguientes funcionalidades.
+	1. Agregar un pedido el cual iniciara con estado pendiente.
+	2. Poder cambiar el estado del pedido a pagado.
+	3. Poder cambiar el estado de un pedido a entregado.
+	4. Poder cancelar el pedido.
+	5. Listar los pedidos en sus diferentes estados.
