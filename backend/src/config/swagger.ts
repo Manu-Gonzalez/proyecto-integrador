@@ -29,84 +29,133 @@ const options: swaggerJSDoc.Options = {
         },
       },
       schemas: {
-        User: {
+        Usuario: {
           type: 'object',
           properties: {
             id: {
-              type: 'string',
-              format: 'uuid',
+              type: 'integer',
             },
-            profileImage: {
-              type: 'string',
-              format: 'uri',
-            },
-            username: {
-              type: 'string',
-            },
-            createdAt: {
-              type: 'string',
-              format: 'date-time',
-            },
-          },
-        },
-        UserRegister: {
-          type: 'object',
-          required: ['username', 'password'],
-          properties: {
-            profileImage: {
-              type: 'string',
-              format: 'uri',
-            },
-            username: {
-              type: 'string',
-              minLength: 2,
-              maxLength: 50,
-            },
-            password: {
-              type: 'string',
-              minLength: 8,
-              maxLength: 64,
-            },
-          },
-        },
-        UserLogin: {
-          type: 'object',
-          required: ['username', 'password'],
-          properties: {
-            username: {
-              type: 'string',
-            },
-            password: {
-              type: 'string',
-            },
-          },
-        },
-        Client: {
-          type: 'object',
-          properties: {
-            id: {
-              type: 'string',
-              format: 'uuid',
-            },
-            firstName: {
-              type: 'string',
-            },
-            lastName: {
+            nombre: {
               type: 'string',
             },
             email: {
               type: 'string',
               format: 'email',
             },
-            dni: {
+            rol: {
+              type: 'string',
+              enum: ['cliente', 'empleado', 'admin'],
+            },
+          },
+        },
+        UsuarioCreate: {
+          type: 'object',
+          required: ['nombre', 'email', 'password'],
+          properties: {
+            nombre: {
+              type: 'string',
+              minLength: 2,
+              maxLength: 50,
+            },
+            email: {
+              type: 'string',
+              format: 'email',
+            },
+            password: {
+              type: 'string',
+              minLength: 8,
+            },
+            rol: {
+              type: 'string',
+              enum: ['cliente', 'empleado', 'admin'],
+            },
+          },
+        },
+        UsuarioLogin: {
+          type: 'object',
+          required: ['email', 'password'],
+          properties: {
+            email: {
+              type: 'string',
+              format: 'email',
+            },
+            password: {
               type: 'string',
             },
-            address: {
+          },
+        },
+        Producto: {
+          type: 'object',
+          properties: {
+            id: {
+              type: 'integer',
+            },
+            nombre: {
               type: 'string',
             },
-            registerAt: {
+            precio: {
+              type: 'number',
+              format: 'float',
+            },
+            imagen: {
               type: 'string',
-              format: 'date-time',
+              nullable: true,
+            },
+            categoriaId: {
+              type: 'integer',
+            },
+            categoria: {
+              $ref: '#/components/schemas/Categoria',
+            },
+          },
+        },
+        ProductoCreate: {
+          type: 'object',
+          required: ['nombre', 'precio', 'categoriaId'],
+          properties: {
+            nombre: {
+              type: 'string',
+              minLength: 1,
+              maxLength: 100,
+            },
+            precio: {
+              type: 'number',
+              format: 'float',
+              minimum: 0,
+            },
+            imagen: {
+              type: 'string',
+            },
+            categoriaId: {
+              type: 'integer',
+            },
+          },
+        },
+        Categoria: {
+          type: 'object',
+          properties: {
+            id: {
+              type: 'integer',
+            },
+            nombre: {
+              type: 'string',
+            },
+            productos: {
+              type: 'array',
+              items: {
+                $ref: '#/components/schemas/Producto',
+              },
+            },
+          },
+        },
+        CategoriaCreate: {
+          type: 'object',
+          required: ['nombre'],
+          properties: {
+            nombre: {
+              type: 'string',
+              minLength: 1,
+              maxLength: 50,
             },
           },
         },
@@ -121,7 +170,7 @@ const options: swaggerJSDoc.Options = {
       },
     },
   },
-  apis: ['./src/routes/v1/*.ts'],
+  apis: ['./src/routes/v1/*.ts', './src/app/**/*.ts'],
 };
 
 export const swaggerSpec = swaggerJSDoc(options);

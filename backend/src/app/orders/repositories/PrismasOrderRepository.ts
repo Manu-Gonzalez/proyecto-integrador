@@ -1,104 +1,108 @@
-import { Prisma, Pedido, PedidoProducto } from "@prisma/client";
 import { prisma } from "../../../config/prismaClient";
 import { OrdersRepository } from "./OrderRepository";
-import { randomUUID } from "crypto";
-
-type PedidoConProductos = Prisma.PedidoGetPayload<{
-    include: { PedidoProducto: true }
-}>;
+import { PedidoCreate } from "../models/OrderTypes";
+import { Pedido, EstadoPedido } from "../models/Order";
 
 export class PrismaOrderRepository implements OrdersRepository {
-    async getAll(): Promise<(Pedido & {
-        Client: any;
-        PedidoProducto: (PedidoProducto & { Producto: any })[];
-    })[]> {
+    async getAll(): Promise<any[]> {
         return prisma.pedido.findMany({
             include: {
-                Client: true,
-                PedidoProducto: {
+                usuario: {
+                    select: {
+                        id: true,
+                        nombre: true,
+                        email: true
+                    }
+                },
+                detalles: {
                     include: {
-                        Producto: true
+                        producto: true
                     }
                 }
             }
         });
     }
 
-    async getById(id: string): Promise<(Pedido & {
-        Client: any;
-        PedidoProducto: (PedidoProducto & { Producto: any })[];
-    }) | null> {
+    async getById(id: number): Promise<any | null> {
         return prisma.pedido.findUnique({
             where: { id },
             include: {
-                Client: true,
-                PedidoProducto: {
+                usuario: {
+                    select: {
+                        id: true,
+                        nombre: true,
+                        email: true
+                    }
+                },
+                detalles: {
                     include: {
-                        Producto: true
+                        producto: true
                     }
                 }
             }
         });
     }
 
-    async create(
-        clientId: string,
-        productos: { productoId: string }[]
-    ): Promise<PedidoConProductos> {
+    async create(pedidoData: PedidoCreate): Promise<any> {
+        let total = 0;
+        
+        // Calcular total
+        for (const detalle of pedidoData.detalles) {
+            const producto = await prisma.producto.findUnique({
+                where: { id: detalle.productoId }
+            });
+            if (producto) {
+                total += producto.precio * detalle.cantidad;
+            }
+        }
+
         return prisma.pedido.create({
             data: {
-                clientId,
-                PedidoProducto: {
-                    create: productos.map(p => ({
-                        productoId: p.productoId
+                usuarioId: pedidoData.usuarioId,
+                total,
+                detalles: {
+                    create: pedidoData.detalles.map(detalle => ({
+                        productoId: detalle.productoId,
+                        cantidad: detalle.cantidad,
+                        subtotal: 0 // Se calculará con trigger o en el servicio
                     }))
                 }
             },
             include: {
-                PedidoProducto: true
+                usuario: {
+                    select: {
+                        id: true,
+                        nombre: true,
+                        email: true
+                    }
+                },
+                detalles: {
+                    include: {
+                        producto: true
+                    }
+                }
             }
         });
     }
 
-    async updatePedido(
-        id: string,
-        data: {
-            status?: boolean;
-            total?: number;
-            productos?: { productoId: string }[];
-        }
-    ): Promise<PedidoConProductos> {
-
-        const updateData: Prisma.PedidoUpdateInput = {};
-
-        if (data.status !== undefined) updateData.status = data.status;
-        if (data.total !== undefined) updateData.total = data.total;
-
-        if (data.productos) {
-            updateData.PedidoProducto = {
-                deleteMany: {}, // Borra todos los subpedidos previos
-                create: data.productos.map(p => ({
-                    productoId: p.productoId
-                }))
-            };
-        }
-
+    async updateEstado(id: number, estado: EstadoPedido): Promise<any> {
         return prisma.pedido.update({
             where: { id },
-            data: updateData,
+            data: { estado },
             include: {
-                PedidoProducto: true
+                usuario: {
+                    select: {
+                        id: true,
+                        nombre: true,
+                        email: true
+                    }
+                },
+                detalles: {
+                    include: {
+                        producto: true
+                    }
+                }
             }
         });
     }
-
-    async deleteSubpedido(pedidoId: string, productoId: string): Promise<{ count: number }> {
-        return prisma.pedidoProducto.deleteMany({
-            where: {
-                pedidoId,
-                productoId,
-            },
-        });
-    }
-
 }

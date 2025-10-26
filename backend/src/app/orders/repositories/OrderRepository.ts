@@ -1,9 +1,9 @@
-import { Producto, Pedido } from "@prisma/client";
-import Order from "../models/Order";
-import { OrderCreate } from "../models/OrderCreate";
+import { PedidoCreate } from "../models/OrderTypes";
+import { EstadoPedido } from "../models/Order";
 
 export interface OrdersRepository {
-    getAll(): Promise<Pedido[]>;
-    getById(id: string): Promise<Pedido | null>;
-    create(clientId: string, productos: { productoId: string; cantidad: number }[]): Promise<Pedido>;
+    getAll(): Promise<any[]>;
+    getById(id: number): Promise<any | null>;
+    create(pedidoData: PedidoCreate): Promise<any>;
+    updateEstado(id: number, estado: EstadoPedido): Promise<any>;
 }

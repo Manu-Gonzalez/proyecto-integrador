@@ -4,47 +4,22 @@
   datos, ademas de que evitamos que nos pasen propiedades extra.
 */
 
+import { UserRole } from "@prisma/client";
+
 export class User {
   constructor(
-    /*  Un id de tipo string nos puede dar mas flexibilidad y tolerancia al cambio,
-      esto nos va a permitir usar IDs incrementales y UUIDs. 
-        Pero ¿que pasaria si algun dia queremos migrar las IDs incrementales a UUIDs
-      por que vamos a usar un sistema de base de datos distribuidas? Tendriamos que
-      modificar muchas cosas si el tipo del ID de nuestros modelos es un number.
-    */
-    public readonly id: string,
-    public readonly profileImage: string,
-    public readonly username: string,
-    public readonly createdAt: Date,
-    public readonly password: string
+    public readonly id: number,
+    public readonly nombre: string,
+    public readonly email: string,
+    public readonly password: string,
+    public readonly rol: UserRole = UserRole.cliente
   ) { }
 
-  /*
-      Un getter nos permite definir una funcion que devuelva un valor y
-    poder acceder a ese valor desde la instancia como si fuese una pro-
-    piedad mas de nuestro objeto.
-      Es ideal para agregar "propiedades" que deben ser calculadas.
-      Se puede definir ocupando la palabra clave "get" antes de un metodo.
-  */
+  isAdmin(): boolean {
+    return this.rol === UserRole.admin;
+  }
 
-  // Ejemplo de getter para obtener el nombre completo
-  // get fullName(): string {
-  //   return `${this.firstName} ${this.lastName}`;
-  // }
-
-  /**
-   * Teniendo en cuenta el tiempo que lleva registrado el cliente devuelve
-   * el porcentaje de descuento que le corresponde.
-   */
-  // getLoyaltyDiscount(): number {
-  //   const oneYearAgo = new Date();
-  //   oneYearAgo.setFullYear(new Date().getFullYear() - 1);
-  //   if (this.registeredAt < oneYearAgo) return 10;
-
-  //   const twoYearAgo = new Date();
-  //   twoYearAgo.setFullYear(new Date().getFullYear() - 2);
-  //   if (this.registeredAt < twoYearAgo) return 12;
-
-  //   return 0;
-  // }
+  isEmpleado(): boolean {
+    return this.rol === UserRole.empleado || this.rol === UserRole.admin;
+  }
 }

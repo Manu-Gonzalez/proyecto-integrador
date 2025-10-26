@@ -1,22 +1,18 @@
+import { UserRole } from "@prisma/client";
 import { User } from "./User";
 
-/* 
-    Debido a que Client es una clase y posee metodos es mas conveniente usar Pick para 
-  agarrar solo las propiedades.
-*/
-
-export type UserCreate = Pick<
-  User,
-  "username" | "password"
-> & {
-  profileImage?: string;
+export type UserCreate = {
+  nombre: string;
+  email: string;
+  password: string;
+  rol?: UserRole;
 };
 
 export interface UserWithoutPassword {
-  id: string;
-  profileImage: string;
-  username: string;
-  createdAt: Date;
+  id: number;
+  nombre: string;
+  email: string;
+  rol: UserRole;
 }
 
 

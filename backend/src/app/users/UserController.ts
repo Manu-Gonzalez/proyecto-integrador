@@ -8,26 +8,13 @@ export default class AuthController {
     constructor(private readonly UserService: UserServices) { }
 
     public login: ExpressFunction = async (req, res, next) => {
-        const device = req.headers["user-agent"];
-
-        if (!device) {
-            return next(new CustomizedError("Falta el header 'user-agent'", 400));
-        }
-        const { username, password, profileImage }: UserCreate = req.body;
+        const { email, password } = req.body;
         try {
-            const tokens = await this.UserService.login({ username, password }, device, req.ip);
-            if (tokens) {
-
-                const { accessToken, refreshToken } = tokens;
-                return res
-                    .cookie("refreshToken", refreshToken, {
-                        httpOnly: true,
-                        secure: false,
-                        sameSite: "lax",
-                    })
-                    .json({ accessToken });
+            const user = await this.UserService.login({ email, password });
+            if (user) {
+                return res.json({ message: "Login exitoso", user });
             }
-            next(new CustomizedError("Error en el logueo, las credenciales pueden ser invalidas", 401));
+            next(new CustomizedError("Credenciales inválidas", 401));
         } catch (error) {
             next(error);
         }
@@ -36,10 +23,8 @@ export default class AuthController {
 
     public register: ExpressFunction = async (req, res, next) => {
         try {
-            const { username, password, profileImage }: UserCreate = req.body;
-            const salt = await bcrypt.genSalt(10);
-            const hashedPassword = await bcrypt.hash(password, salt);
-            const user: UserCreate = { username, password: hashedPassword, profileImage: profileImage || "" }
+            const { nombre, email, password, rol }: UserCreate = req.body;
+            const user: UserCreate = { nombre, email, password, rol }
             const userCreated = await this.UserService.create(user);
 
             res.status(201).json(userCreated);
@@ -49,10 +34,8 @@ export default class AuthController {
     }
 
     public logout: ExpressFunction = async (req, res, next) => {
-        const { refreshToken } = req.cookies;
         try {
-            await this.UserService.logout(refreshToken);
-            res.clearCookie("refreshToken").json({ message: "Sesión cerrada" });
+            res.json({ message: "Sesión cerrada" });
         } catch (error: any) {
             next(new CustomizedError(error.message, 500));
         }

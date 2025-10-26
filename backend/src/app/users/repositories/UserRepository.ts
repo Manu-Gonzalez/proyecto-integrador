@@ -1,12 +1,11 @@
-import { string } from "zod";
 import { User } from "../models/User";
 import { UserCreate, UserWithoutPassword } from "../models/UserTypes";
 
 export interface UsersRepository {
   getAll(): Promise<UserWithoutPassword[]>;
-  getById(id: string): Promise<UserWithoutPassword | undefined>;
+  getById(id: number): Promise<UserWithoutPassword | undefined>;
   create(user: UserCreate): Promise<UserWithoutPassword>;
-  login(user: UserCreate): Promise<UserWithoutPassword | undefined>;
+  login(credentials: { email: string; password: string }): Promise<User | undefined>;
 }
 
 //  login(email: string, password: string, device: string, ip?: string) {

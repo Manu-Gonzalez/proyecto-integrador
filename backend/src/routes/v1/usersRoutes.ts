@@ -5,10 +5,17 @@ import { container } from "src/app";
 
 /**
  * @swagger
+ * tags:
+ *   name: Usuarios
+ *   description: Gestión de usuarios del sistema
+ */
+
+/**
+ * @swagger
  * /users:
  *   get:
  *     summary: Obtener todos los usuarios
- *     tags: [Users]
+ *     tags: [Usuarios]
  *     security:
  *       - bearerAuth: []
  *     responses:
@@ -19,7 +26,7 @@ import { container } from "src/app";
  *             schema:
  *               type: array
  *               items:
- *                 $ref: '#/components/schemas/User'
+ *                 $ref: '#/components/schemas/Usuario'
  *       401:
  *         description: No autorizado
  *         content:
@@ -33,20 +40,20 @@ import { container } from "src/app";
  * /users/register:
  *   post:
  *     summary: Registrar un nuevo usuario
- *     tags: [Users]
+ *     tags: [Usuarios]
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/UserRegister'
+ *             $ref: '#/components/schemas/UsuarioCreate'
  *     responses:
  *       201:
  *         description: Usuario creado exitosamente
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/User'
+ *               $ref: '#/components/schemas/Usuario'
  *       400:
  *         description: Datos inválidos
  *         content:
@@ -60,13 +67,13 @@ import { container } from "src/app";
  * /users/login:
  *   post:
  *     summary: Iniciar sesión
- *     tags: [Users]
+ *     tags: [Usuarios]
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/UserLogin'
+ *             $ref: '#/components/schemas/UsuarioLogin'
  *     responses:
  *       200:
  *         description: Login exitoso
@@ -75,13 +82,10 @@ import { container } from "src/app";
  *             schema:
  *               type: object
  *               properties:
- *                 accessToken:
+ *                 message:
  *                   type: string
- *         headers:
- *           Set-Cookie:
- *             schema:
- *               type: string
- *               example: refreshToken=abc123; HttpOnly; Path=/
+ *                 user:
+ *                   $ref: '#/components/schemas/Usuario'
  *       401:
  *         description: Credenciales inválidas
  *         content:

@@ -11,7 +11,7 @@ export default class UserServices {
     return await this.userRepository?.getAll();
   }
 
-  async getById(id: string): Promise<UserWithoutPassword | undefined> {
+  async getById(id: number): Promise<UserWithoutPassword | undefined> {
     return await this.userRepository?.getById(id);
   }
 
@@ -19,42 +19,12 @@ export default class UserServices {
     return await this.userRepository?.create(user);
   }
 
-  async login(user: UserCreate, device: string, ip?: string): Promise<{ accessToken: string, refreshToken: string } | undefined> {
-    const { username, password } = user;
-
-    const userIsAuth = await this.userRepository.login(user);
-
-    if (!userIsAuth) return undefined
-
-    const accessToken = tokenFunctions.generateAccessToken(userIsAuth);
-    const refreshToken = tokenFunctions.generateRefreshToken();
-
-    const refreshTokenHash = await tokenFunctions.hashToken(refreshToken);
-    await prisma.session.create({
-      data: {
-        userId: userIsAuth.id,
-        device,
-        ip,
-        refreshTokenHash,
-        expiresAt: tokenFunctions.getRefreshExpiryDate(),
-      }
-    });
-    return { accessToken, refreshToken };
+  async login(credentials: { email: string; password: string }): Promise<User | undefined> {
+    return await this.userRepository.login(credentials);
   }
 
-  async logout(providedRefreshToken: string) {
-    const sessions = await prisma.session.findMany({ where: { isValid: true } });
-
-    for (const session of sessions) {
-      const match = await tokenFunctions.verifyHashedToken(providedRefreshToken, session.refreshTokenHash);
-      if (match) {
-        await prisma.session.update({
-          where: { id: session.id },
-          data: { isValid: false }
-        });
-        return;
-      }
-    }
+  async logout(): Promise<void> {
+    // Logout simplificado sin sesiones
   }
 
 

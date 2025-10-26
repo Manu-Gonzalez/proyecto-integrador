@@ -1,17 +1,11 @@
-// import { Router } from "express";
-// import OrdersController from "@app/Orders/controller";
-// import { authMiddlewareJWT } from "@app/users/middleware";
-// import { container } from "src/app";
+import { Router } from "express";
 
-// export const OrderssRoutes = () => {
-//     const router = Router();
-//     const OrdersController =
-//         container.resolve<OrdersController>("Orderss-controller");
+export const ordersRoutes = () => {
+    const router = Router();
 
-//     router.get("/", authMiddlewareJWT, OrdersController.getAll);
+    router.get("/", (req, res) => {
+        res.json({ message: "Orders endpoint" });
+    });
 
-//     router.post("/add", authMiddlewareJWT, OrdersController.create);
-
-//     router.get("/:id", authMiddlewareJWT, OrdersController.getById)
-//     return router;
-// };
+    return router;
+};

@@ -1,13 +1,11 @@
 
-# Evaluacion backend
+# Sistema de Ventas - Backend
 
-## Actividad
+## Descripción
 
-Diseñe un sistema de ventas mediante pedidos que pueda manejar productos, pedidos y clientes, aplicando impuestos, descuentos y calculando el total.
+Sistema de ventas mediante pedidos que maneja usuarios, productos, pedidos y facturación con roles de usuario (cliente, empleado, admin).
 
-El sistema de ventas y clientes solo deberia poder ser accedido por alguien autenticado, mientras que a la lista de los productos deberia poder acceder cualquier persona que quisice consultar los productos a la venta. El sistema de autenticacion deberia ser manejado unicamente por el backend mediante cookies y JWT.
-
-Se evaluara si siguio las formas y estructura del proyecto, ademas de cumplir con los requisitos y los tests ya hechos.
+El sistema utiliza autenticación JWT para proteger endpoints según roles de usuario. Los productos pueden ser consultados públicamente, mientras que la gestión de pedidos requiere autenticación.
 
 
 ## Conocimientos a aplicar
@@ -33,24 +31,53 @@ Algunas partes del proyecto contaran con comentarios que aportan consejos sobre 
 A la hora de hacer un pedido se debe devolver el total de la posible venta, para ello, por ley, se tiene que devolver el total de la venta y cuanto de esa venta es IVA, ademas a los clientes que esten registrados desde x tiempo se les aplica un descuento sobre el total de la venta luego del IVA.
 
 
-## Requisitos de la aplicacion
+## Módulos Actuales
 
-- Sistema de autenticacion que pueda
-	1. Registrar un usuario (empleado).
-	2. Autenticar un usuario.
-	3. Verificar quien accede a la aplicacion y limitar su acceso.
+### Usuarios
+- **Modelo**: Usuario con roles (cliente, empleado, admin)
+- **Campos**: id, nombre, email, password, rol
+- **Funcionalidades**:
+  - Registro de usuarios
+  - Login con email/password
+  - Gestión de roles
 
-- Un modulo que se encargue de manejar productos. Con las siguientes funcionalidades.
-	1. Listar productos con paginado sin autenticacion.
-	2. Agregar productos si se esta autenticado.
-	3. Eliminar productos si se esta autenticado.
-	4. Editar productos estando autenticado.
+### Productos y Categorías
+- **Modelos**: Producto, Categoria
+- **Campos Producto**: id, nombre, precio, imagen, categoriaId
+- **Campos Categoria**: id, nombre
+- **Funcionalidades**:
+  - CRUD completo de productos con imagen
+  - CRUD completo de categorías
+  - Consulta de productos por categoría
+  - Validación de existencia de imagen
+  - Endpoints públicos para consulta
 
-- Funcionalidad para obtener detalles de un cliente especifico y sus pedidos pendientes.
+### Pedidos
+- **Modelos**: Pedido, DetallePedido
+- **Estados**: pendiente, confirmado, entregado, cancelado
+- **Funcionalidades**:
+  - Crear pedidos con detalles
+  - Cambiar estado de pedidos
+  - Consultar pedidos por usuario
+  - Cálculo automático de totales
 
-- Modulo para el manejo de los pedidos accesible unicamente con autenticacion. Debera tener las siguientes funcionalidades.
-	1. Agregar un pedido el cual iniciara con estado pendiente.
-	2. Poder cambiar el estado del pedido a pagado.
-	3. Poder cambiar el estado de un pedido a entregado.
-	4. Poder cancelar el pedido.
-	5. Listar los pedidos en sus diferentes estados.
+### Facturación
+- **Modelos**: Factura, MedioPago
+- **Funcionalidades**:
+  - Generar facturas para pedidos
+  - Gestión de medios de pago
+
+## Estructura del Proyecto
+
+```
+src/
+├── app/
+│   ├── users/          # Módulo de usuarios
+│   ├── productos/      # Módulo de productos
+│   ├── categorias/     # Módulo de categorías
+│   └── orders/         # Módulo de pedidos
+├── config/             # Configuración de BD
+├── routes/             # Rutas de la API
+├── shared/             # Utilidades compartidas
+└── diContainer/        # Inyección de dependencias
+```
