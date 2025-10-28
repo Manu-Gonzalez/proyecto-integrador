@@ -1,5 +1,4 @@
 .nav {
-    
     padding: 10px;
 }
 
@@ -10,7 +9,7 @@
 }
 
 .nav a {
-    color: #05f2db;
+    color: var(--color-primario);
     text-decoration: none;
     font-weight: bold;
 }
