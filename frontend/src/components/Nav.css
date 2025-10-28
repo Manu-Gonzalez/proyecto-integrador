@@ -1,0 +1,16 @@
+.nav {
+    
+    padding: 10px;
+}
+
+.nav-list {
+    display: flex;
+    gap: 20px;
+    list-style: none;
+}
+
+.nav a {
+    color: #05f2db;
+    text-decoration: none;
+    font-weight: bold;
+}
