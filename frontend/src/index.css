@@ -10,11 +10,13 @@
     --color-fuente2: #FFFFFF;
 
     font-family: Arial, Helvetica, sans-serif;
+    
 }
 
 * {
     margin: 0;
     padding: 0;
+    color: var(--color-fuente);
 }
 
 .d-flex {
@@ -39,6 +41,10 @@
 
 .justify-end {
     justify-content: end;
+}
+
+.justify-around {
+    justify-content: space-around;
 }
 
 .align-center {
@@ -67,6 +73,10 @@
 
 .text-right {
     text-align: right;
+}
+
+.list-none {
+    list-style: none;
 }
 
 .gap-1 {

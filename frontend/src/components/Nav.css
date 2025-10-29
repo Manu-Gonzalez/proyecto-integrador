@@ -1,15 +1,65 @@
-.nav {
-    padding: 10px;
+nav{
+    width: calc(100% - 2rem);
+    padding-bottom: 8px;
 }
 
-.nav-list {
-    display: flex;
-    gap: 20px;
-    list-style: none;
-}
-
-.nav a {
-    color: var(--color-primario);
+a{
     text-decoration: none;
-    font-weight: bold;
+    font-size: 17px;
+    position: relative;
+    display: inline-block;
+}
+
+b{
+    color: currentColor;
+    transition: opacity 0.2s;
+}
+
+.seleccionado{
+    color: var(--color-primario);
+}
+
+.seleccionado::after{
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-color: var(--color-primario);
+    transition: width 0.3s ease;
+}
+
+a:not(.seleccionado)::after{
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0;
+    height: 3px;
+    background-color: var(--color-primario);
+    transition: width 0.3s ease;
+}
+
+.carrito{
+    width: 40px;
+    height: 40px;
+    background-color: var(--color-primario);
+    border-radius: 50%;
+}
+
+.carrito svg{
+    width: 25px;
+    height: 25px;
+    fill: var(--color-fuente2);
+}
+
+.cantidad{
+    background-color: var(--color-secundario);
+    color: var(--color-fuente2);
+    position: relative;
+    font-size: 15px;
+    padding: 3px;
+    top: -20px;
+    right: -20px;
 }
