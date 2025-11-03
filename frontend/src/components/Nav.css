@@ -46,6 +46,8 @@ a:not(.seleccionado)::after{
     height: 40px;
     background-color: var(--color-primario);
     border-radius: 50%;
+    position: relative;
+    cursor: pointer;
 }
 
 .carrito svg{
@@ -57,9 +59,11 @@ a:not(.seleccionado)::after{
 .cantidad{
     background-color: var(--color-secundario);
     color: var(--color-fuente2);
-    position: relative;
+    position: absolute;
     font-size: 15px;
-    padding: 3px;
-    top: -20px;
-    right: -20px;
+    padding: 5px 8px;
+    border: 2px solid var(--color-fuente2);
+    border-radius: 50%;
+    top: -12px;
+    right: -10px;
 }
