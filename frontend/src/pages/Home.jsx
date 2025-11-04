@@ -11,9 +11,12 @@ function Home() {
                     <button className="btn btn-outline mx-2">Ordenar Ahora</button>
                 </div>
             </div>
-            <div className="d-flex align-center">
+            <div className="d-flex align-center" id="producto">
+                <img src="/trueno.svg" id="trueno"/>
                 <img src="/hamburguesa.png" alt="Hamburguesa"/>
+                <img src="/trueno.svg" id="trueno2"/>
             </div>
+            <img src="/wave2.svg" id="decoracion2"/>
         </div>
     );
 }
