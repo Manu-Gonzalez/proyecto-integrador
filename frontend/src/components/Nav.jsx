@@ -36,7 +36,7 @@ function Nav() {
                 </li>
             </ul>
             <div>
-                <div className="carrito d-flex flex-col justify-center align-center">
+                <div className="carrito d-flex flex-col justify-center align-center cursor-pointer">
                     <div className="cantidad">
                         2
                     </div>

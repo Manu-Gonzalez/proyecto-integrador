@@ -47,6 +47,10 @@
     justify-content: space-around;
 }
 
+.justify-between {
+    justify-content: space-between;
+}
+
 .align-center {
     align-items: center;
 }
@@ -153,8 +157,8 @@
 }
 
 .px-6 {
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
+    padding-left: 3.5rem;
+    padding-right: 3.5rem;
 }
 
 .py-1 {
@@ -178,7 +182,7 @@
 }
 
 .py-5 {
-    padding-top: 1.25rem;
+    padding-top: .25rem;
     padding-bottom: 1.25rem;
 }
 
@@ -191,6 +195,10 @@
     width: 100%;
 }
 
+.w-300 {
+    width: 300px;
+}
+
 .w-auto {
     width: auto;
 }
@@ -201,6 +209,10 @@
 
 .h-auto {
     height: auto;
+}
+
+.vh100{
+    height: 100vh;
 }
 
 .cursor-pointer {
@@ -252,8 +264,33 @@ h1 {
     font-family: 'Poppins', sans-serif;
     font-weight: 900;
     font-style: italic;
+    font-size: 45px;
 }
 
 h1 B {
     color: var(--color-primario);
+}
+
+#texto{
+    width: 550px;
+}
+
+#hero{
+    height: calc(100vh - 71px);
+    padding-left: 3.5rem;
+    padding-right: 0;
+}
+
+/* Estilos específicos para Home */
+#hero img {
+    max-width: 100%;
+    height: auto;
+    margin-left: auto;
+}
+
+#decoracion1{
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 0;
 }
