@@ -32,6 +32,7 @@ model Producto {
   id          Int            @id @default(autoincrement())
   nombre      String
   precio      Float
+  imagen      String?
   categoriaId Int
   categoria   Categoria      @relation(fields: [categoriaId], references: [id])
   detalles    DetallePedido[]
@@ -74,4 +75,3 @@ model Factura {
   pedido       Pedido    @relation(fields: [pedidoId], references: [id])
   metodoPago   MedioPago @relation(fields: [metodoPagoId], references: [id])
 }
-
