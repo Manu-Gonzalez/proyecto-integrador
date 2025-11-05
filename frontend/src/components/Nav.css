@@ -1,10 +1,9 @@
 nav{
     width: calc(100% - 2rem);
-    padding-bottom: 8px;
     position:sticky;
-    background-color: var(--color-fondo);
+    background-color: var(--color-background);
     z-index: 2;
-    top: 2;
+    top: 0;
 }
 
 a{
