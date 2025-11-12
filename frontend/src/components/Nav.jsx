@@ -45,7 +45,9 @@ function Nav() {
                     </svg>
                 </div>
                 <div className="d-flex gap-2">
-                    <button className="btn btn-primary mx-2">Iniciar Sesion</button>
+                    <Link to="/login">
+                        <button className="btn btn-primary mx-2">Iniciar Sesion</button>
+                    </Link>
                 </div>
             </div>
         </nav>
