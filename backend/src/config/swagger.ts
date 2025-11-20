@@ -159,6 +159,87 @@ const options: swaggerJSDoc.Options = {
             },
           },
         },
+        Pedido: {
+          type: 'object',
+          properties: {
+            id: {
+              type: 'integer',
+            },
+            fecha: {
+              type: 'string',
+              format: 'date-time',
+            },
+            estado: {
+              type: 'string',
+              enum: ['pendiente', 'confirmado', 'entregado', 'cancelado'],
+            },
+            total: {
+              type: 'number',
+              format: 'float',
+            },
+            usuarioId: {
+              type: 'integer',
+            },
+            usuario: {
+              $ref: '#/components/schemas/Usuario',
+            },
+            detalles: {
+              type: 'array',
+              items: {
+                $ref: '#/components/schemas/DetallePedido',
+              },
+            },
+          },
+        },
+        PedidoCreate: {
+          type: 'object',
+          required: ['usuarioId', 'detalles'],
+          properties: {
+            usuarioId: {
+              type: 'integer',
+            },
+            detalles: {
+              type: 'array',
+              items: {
+                type: 'object',
+                required: ['productoId', 'cantidad'],
+                properties: {
+                  productoId: {
+                    type: 'integer',
+                  },
+                  cantidad: {
+                    type: 'integer',
+                    minimum: 1,
+                  },
+                },
+              },
+            },
+          },
+        },
+        DetallePedido: {
+          type: 'object',
+          properties: {
+            id: {
+              type: 'integer',
+            },
+            pedidoId: {
+              type: 'integer',
+            },
+            productoId: {
+              type: 'integer',
+            },
+            cantidad: {
+              type: 'integer',
+            },
+            subtotal: {
+              type: 'number',
+              format: 'float',
+            },
+            producto: {
+              $ref: '#/components/schemas/Producto',
+            },
+          },
+        },
         Error: {
           type: 'object',
           properties: {

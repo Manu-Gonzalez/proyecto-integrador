@@ -13,3 +13,16 @@ export type DetallePedidoCreate = {
   cantidad: number;
   subtotal: number;
 };
+
+export type OrderFilters = {
+  estado?: string;
+  usuarioId?: number;
+  fechaDesde?: string;
+  fechaHasta?: string;
+  totalMin?: number;
+  totalMax?: number;
+  pagina?: number;
+  limite?: number;
+  ordenarPor?: 'fecha' | 'total' | 'estado';
+  orden?: 'asc' | 'desc';
+};
