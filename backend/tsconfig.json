@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es2016",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "baseUrl": ".",
+    "rootDir": ".",
+    "outDir": "dist",
+    "types": ["vitest/globals"],
+    "paths": {
+      "@app/*": ["src/app/*"],
+      "@diContainer/*": ["src/diContainer/*"],
+      "@routes/*": ["src/routes/*"],
+      "@database/*": ["src/database/*"],
+    }
+  },
+  "exclude": ["node_modules"],
+  "include": ["src", "tests"]
+}

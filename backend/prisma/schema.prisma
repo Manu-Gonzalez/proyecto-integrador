@@ -1,0 +1,110 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url = env("DATABASE_URL")
+}
+
+model Usuario {
+  id       Int      @id @default(autoincrement())
+  nombre   String
+  email    String   @unique
+  password String
+  rol      UserRole   @default(cliente) // cliente o admin
+  pedidos  Pedido[]
+  carrito  Carrito?
+}
+
+enum UserRole {
+  cliente
+  empleado
+  admin
+}
+
+model Categoria {
+  id        Int        @id @default(autoincrement())
+  nombre    String
+  productos Producto[]
+}
+
+model Producto {
+  id          Int            @id @default(autoincrement())
+  nombre      String
+  precio      Float
+  imagen      String?
+  tipo        String         @default("producto") // producto, plato, bebida, etc.
+  categoriaId Int
+  categoria   Categoria      @relation(fields: [categoriaId], references: [id])
+  detalles    DetallePedido[]
+  itemsCarrito ItemCarrito[]
+}
+
+model Pedido {
+  id        Int             @id @default(autoincrement())
+  fecha     DateTime        @default(now())
+  estado    String          @default("pendiente") // pendiente, confirmado, entregado, cancelado
+  total     Float           @default(0.0)
+  usuarioId Int
+  usuario   Usuario         @relation(fields: [usuarioId], references: [id])
+  mesaId    Int?
+  mesa      Mesa?           @relation(fields: [mesaId], references: [id])
+  detalles  DetallePedido[]
+  factura   Factura?
+}
+
+model DetallePedido {
+  id         Int      @id @default(autoincrement())
+  pedidoId   Int
+  productoId Int
+  cantidad   Int
+  subtotal   Float
+  pedido     Pedido   @relation(fields: [pedidoId], references: [id])
+  producto   Producto @relation(fields: [productoId], references: [id])
+}
+
+model MedioPago {
+  id       Int       @id @default(autoincrement())
+  tipo     String    // tarjeta, efectivo, transferencia, etc.
+  detalles String?   // últimos dígitos tarjeta, alias CBU, etc.
+  facturas Factura[]
+}
+
+model Factura {
+  id           Int       @id @default(autoincrement())
+  fecha        DateTime  @default(now())
+  total        Float
+  pedidoId     Int       @unique
+  metodoPagoId Int
+  pedido       Pedido    @relation(fields: [pedidoId], references: [id])
+  metodoPago   MedioPago @relation(fields: [metodoPagoId], references: [id])
+}
+
+model Carrito {
+  id        Int         @id @default(autoincrement())
+  usuarioId Int         @unique
+  usuario   Usuario     @relation(fields: [usuarioId], references: [id])
+  items     ItemCarrito[]
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+}
+
+model ItemCarrito {
+  id             Int      @id @default(autoincrement())
+  carritoId      Int
+  carrito        Carrito  @relation(fields: [carritoId], references: [id], onDelete: Cascade)
+  productoId     Int
+  producto       Producto @relation(fields: [productoId], references: [id])
+  cantidad       Int
+  precioUnitario Float
+  subtotal       Float
+}
+
+model Mesa {
+  id        Int      @id @default(autoincrement())
+  numero    Int      @unique
+  capacidad Int      // número de personas
+  estado    String   @default("disponible") // disponible, ocupada
+  pedidos   Pedido[]
+}
