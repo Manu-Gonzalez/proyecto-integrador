@@ -1,6 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
-import "../index.css";
+import "../../../styles/global.css";
 import "./Nav.css";
+import BtnPrimary from "../../ui/Btn-primary";
 
 function Nav() {
     const location = useLocation();
@@ -46,7 +47,7 @@ function Nav() {
                 </div>
                 <div className="d-flex gap-2">
                     <Link to="/login">
-                        <button className="btn btn-primary mx-2">Iniciar Sesion</button>
+                        <BtnPrimary>Iniciar Sesion</BtnPrimary>
                     </Link>
                 </div>
             </div>

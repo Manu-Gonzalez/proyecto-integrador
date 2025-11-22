@@ -1,3 +1,5 @@
+
+
 #texto{
     width: 550px;
 }
@@ -6,6 +8,7 @@
     height: calc(100vh - 71px);
     padding-left: 3.5rem;
     padding-right: 0;
+    background-color: var(--color-background);
 }
 
 #producto{
