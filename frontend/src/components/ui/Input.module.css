@@ -1,0 +1,11 @@
+.input {
+    padding: 8px 10px;
+    border-radius: 5px;
+    border: 1px solid #0000004d;
+    font-family: inherit;
+}
+
+.input:focus {
+    outline: none;
+    border-color: var(--color-primario);
+}
