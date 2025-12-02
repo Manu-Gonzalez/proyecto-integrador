@@ -19,8 +19,13 @@ export default class UserServices {
     return await this.userRepository?.create(user);
   }
 
-  async login(credentials: { email: string; password: string }): Promise<User | undefined> {
-    return await this.userRepository.login(credentials);
+  async login(credentials: { email: string; password: string }): Promise<{ user: User; token: string } | undefined> {
+    const user = await this.userRepository.login(credentials);
+    if (user) {
+      const token = tokenFunctions.generateAccessToken({ id: user.id, email: user.email, rol: user.rol });
+      return { user, token };
+    }
+    return undefined;
   }
 
   async logout(): Promise<void> {

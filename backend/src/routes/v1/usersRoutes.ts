@@ -86,6 +86,9 @@ import { container } from "src/app";
  *                   type: string
  *                 user:
  *                   $ref: '#/components/schemas/Usuario'
+ *                 token:
+ *                   type: string
+ *                   description: JWT access token
  *       401:
  *         description: Credenciales inválidas
  *         content:

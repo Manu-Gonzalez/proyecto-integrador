@@ -10,9 +10,9 @@ export default class AuthController {
     public login: ExpressFunction = async (req, res, next) => {
         const { email, password } = req.body;
         try {
-            const user = await this.UserService.login({ email, password });
-            if (user) {
-                return res.json({ message: "Login exitoso", user });
+            const result = await this.UserService.login({ email, password });
+            if (result) {
+                return res.json({ message: "Login exitoso", user: result.user, token: result.token });
             }
             next(new CustomizedError("Credenciales inválidas", 401));
         } catch (error) {

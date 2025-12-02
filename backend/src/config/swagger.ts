@@ -159,6 +159,182 @@ const options: swaggerJSDoc.Options = {
             },
           },
         },
+        Pedido: {
+          type: 'object',
+          properties: {
+            id: {
+              type: 'integer',
+            },
+            fecha: {
+              type: 'string',
+              format: 'date-time',
+            },
+            estado: {
+              type: 'string',
+              enum: ['pendiente', 'confirmado', 'entregado', 'cancelado'],
+            },
+            total: {
+              type: 'number',
+              format: 'float',
+            },
+            usuarioId: {
+              type: 'integer',
+            },
+            usuario: {
+              $ref: '#/components/schemas/Usuario',
+            },
+            detalles: {
+              type: 'array',
+              items: {
+                $ref: '#/components/schemas/DetallePedido',
+              },
+            },
+          },
+        },
+        PedidoCreate: {
+          type: 'object',
+          required: ['usuarioId', 'detalles'],
+          properties: {
+            usuarioId: {
+              type: 'integer',
+            },
+            detalles: {
+              type: 'array',
+              items: {
+                type: 'object',
+                required: ['productoId', 'cantidad'],
+                properties: {
+                  productoId: {
+                    type: 'integer',
+                  },
+                  cantidad: {
+                    type: 'integer',
+                    minimum: 1,
+                  },
+                },
+              },
+            },
+          },
+        },
+        DetallePedido: {
+          type: 'object',
+          properties: {
+            id: {
+              type: 'integer',
+            },
+            pedidoId: {
+              type: 'integer',
+            },
+            productoId: {
+              type: 'integer',
+            },
+            cantidad: {
+              type: 'integer',
+            },
+            subtotal: {
+              type: 'number',
+              format: 'float',
+            },
+            producto: {
+              $ref: '#/components/schemas/Producto',
+            },
+          },
+        },
+        Cart: {
+          type: 'object',
+          properties: {
+            id: {
+              type: 'integer',
+            },
+            usuarioId: {
+              type: 'integer',
+            },
+            items: {
+              type: 'array',
+              items: {
+                $ref: '#/components/schemas/CartItem',
+              },
+            },
+            createdAt: {
+              type: 'string',
+              format: 'date-time',
+            },
+            updatedAt: {
+              type: 'string',
+              format: 'date-time',
+            },
+            total: {
+              type: 'number',
+              format: 'float',
+            },
+          },
+        },
+        CartItem: {
+          type: 'object',
+          properties: {
+            id: {
+              type: 'integer',
+            },
+            carritoId: {
+              type: 'integer',
+            },
+            productoId: {
+              type: 'integer',
+            },
+            cantidad: {
+              type: 'integer',
+            },
+            precioUnitario: {
+              type: 'number',
+              format: 'float',
+            },
+            subtotal: {
+              type: 'number',
+              format: 'float',
+            },
+            producto: {
+              type: 'object',
+              properties: {
+                id: {
+                  type: 'integer',
+                },
+                nombre: {
+                  type: 'string',
+                },
+                precio: {
+                  type: 'number',
+                  format: 'float',
+                },
+                imagen: {
+                  type: ['string', 'null'],
+                },
+              },
+            },
+          },
+        },
+        AddItemToCart: {
+          type: 'object',
+          required: ['productoId', 'cantidad'],
+          properties: {
+            productoId: {
+              type: 'integer',
+            },
+            cantidad: {
+              type: 'integer',
+              minimum: 1,
+            },
+          },
+        },
+        UpdateCartItem: {
+          type: 'object',
+          required: ['cantidad'],
+          properties: {
+            cantidad: {
+              type: 'integer',
+              minimum: 1,
+            },
+          },
+        },
         Error: {
           type: 'object',
           properties: {
