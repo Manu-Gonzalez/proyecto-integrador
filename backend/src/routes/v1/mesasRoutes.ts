@@ -1,131 +1,98 @@
 import { Router } from "express";
-import { authMiddlewareJWT } from "@app/users/middleware";
-import { container } from "src/app";
-import { MesaController } from "../../app/mesas/MesaController";
+import { PrismaClient } from '@prisma/client';
 
-/**
- * @swagger
- * tags:
- *   name: Mesas
- *   description: Gestión de mesas
- */
-
-/**
- * @swagger
- * /mesas:
- *   get:
- *     summary: Obtener todas las mesas
- *     tags: [Mesas]
- *     security:
- *       - bearerAuth: []
- *     responses:
- *       200:
- *         description: Lista de mesas
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/Mesa'
- *   post:
- *     summary: Crear una nueva mesa
- *     tags: [Mesas]
- *     security:
- *       - bearerAuth: []
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/MesaCreate'
- *     responses:
- *       201:
- *         description: Mesa creada
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Mesa'
- */
-
-/**
- * @swagger
- * /mesas/{id}:
- *   get:
- *     summary: Obtener mesa por ID
- *     tags: [Mesas]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: integer
- *         description: ID de la mesa
- *     responses:
- *       200:
- *         description: Mesa encontrada
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Mesa'
- *       404:
- *         description: Mesa no encontrada
- *   put:
- *     summary: Actualizar mesa
- *     tags: [Mesas]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: integer
- *         description: ID de la mesa
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/MesaUpdate'
- *     responses:
- *       200:
- *         description: Mesa actualizada
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Mesa'
- *       404:
- *         description: Mesa no encontrada
- *   delete:
- *     summary: Eliminar mesa
- *     tags: [Mesas]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: integer
- *         description: ID de la mesa
- *     responses:
- *       200:
- *         description: Mesa eliminada
- *       404:
- *         description: Mesa no encontrada
- */
+const prisma = new PrismaClient();
 
 export const mesasRoutes = () => {
   const router = Router();
-  const mesaController = container.resolve<MesaController>("mesa-controller");
 
-  router.get("/", authMiddlewareJWT, mesaController.getAllMesas);
-  router.post("/", authMiddlewareJWT, mesaController.createMesa);
-  router.get("/:id", authMiddlewareJWT, mesaController.getMesaById);
-  router.put("/:id", authMiddlewareJWT, mesaController.updateMesa);
-  router.delete("/:id", authMiddlewareJWT, mesaController.deleteMesa);
+  router.get("/", async (req, res) => {
+    try {
+      const mesas = await prisma.mesa.findMany({
+        orderBy: { numero: 'asc' }
+      });
+      res.json(mesas);
+    } catch (error) {
+      console.error('Error fetching tables:', error);
+      res.status(500).json({ error: 'Error interno del servidor' });
+    }
+  });
+
+  router.post("/", async (req, res) => {
+    try {
+      console.log('Mesa creation request received:');
+      console.log('Headers:', req.headers);
+      console.log('Body:', req.body);
+      console.log('Body type:', typeof req.body);
+      
+      if (!req.body) {
+        return res.status(400).json({ error: 'Request body is required' });
+      }
+      
+      const { numero, capacidad } = req.body;
+      
+      if (!numero || !capacidad) {
+        return res.status(400).json({ error: 'Número y capacidad son requeridos' });
+      }
+      
+      const newMesa = await prisma.mesa.create({
+        data: {
+          numero,
+          capacidad,
+          estado: "disponible"
+        }
+      });
+      
+      res.status(201).json(newMesa);
+    } catch (error: any) {
+      if (error.code === 'P2002') {
+        return res.status(400).json({ error: 'Ya existe una mesa con ese número' });
+      }
+      console.error('Error creating table:', error);
+      res.status(500).json({ error: 'Error interno del servidor' });
+    }
+  });
+
+  router.put("/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { estado } = req.body || {};
+      
+      console.log('Updating mesa estado:', { id, estado, body: req.body });
+      
+      const updatedMesa = await prisma.mesa.update({
+        where: { id: parseInt(id) },
+        data: { estado }
+      });
+      
+      console.log('Updated mesa result:', updatedMesa);
+      res.json(updatedMesa);
+    } catch (error: any) {
+      if (error.code === 'P2025') {
+        return res.status(404).json({ error: 'Mesa no encontrada' });
+      }
+      console.error('Error updating table:', error);
+      res.status(500).json({ error: 'Error interno del servidor' });
+    }
+  });
+
+  router.delete("/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      
+      await prisma.mesa.delete({
+        where: { id: parseInt(id) }
+      });
+      
+      res.status(204).send();
+    } catch (error: any) {
+      if (error.code === 'P2025') {
+        return res.status(404).json({ error: 'Mesa no encontrada' });
+      }
+      console.error('Error deleting table:', error);
+      res.status(500).json({ error: 'Error interno del servidor' });
+    }
+  });
 
   return router;
 };

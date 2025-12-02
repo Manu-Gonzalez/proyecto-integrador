@@ -2,7 +2,7 @@ import { UserRole } from "@prisma/client";
 import { User } from "../models/User";
 import { UserCreate, UserWithoutPassword } from "../models/UserTypes";
 import { UsersRepository } from "./UserRepository";
-import { prisma } from "src/config/prismaClient";
+import { prisma } from "../../../config/prismaClient";
 import bcrypt from 'bcryptjs';
 
 export class PrismaUserRepository implements UsersRepository {
@@ -78,7 +78,7 @@ export class PrismaUserRepository implements UsersRepository {
 // import { randomUUID } from "crypto";
 // import { UserCreate, UserWithoutPassword } from "../models/UserTypes";
 // import { UsersRepository } from "./UserRepository";
-// import { prisma } from "src/config/prismaClient";
+// import { prisma } from "../../../config/prismaClient";
 
 // export class PrismaUserRepository implements UsersRepository {
 //     async getAll(): Promise<UserWithoutPassword[]> {

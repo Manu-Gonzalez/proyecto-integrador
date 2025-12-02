@@ -10,8 +10,8 @@ function Hero() {
             <img src="/wave1.svg" id="decoracion1"/>
             <div className="container d-flex flex-col justify-center gap-5 h-100" id="texto">
                 <h1>¿CON <b>HAMBRE</b> DE QUERER <b>COMER</b> ALGO?</h1>
-                <h4>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vitae egestas nulla. Integer tincidunt augue id lectus accumsan posuere et in metus. Proin sodales lectus turpis. Nulla tortor augue, malesuada vitae massa in, auctor efficitur nisl. Nam scelerisque consectetur </h4>
-                <div className="d-flex my-6 gap-3">
+                <h4>Descubre el sabor auténtico en cada bocado. Nuestro restaurante te ofrece los mejores platos preparados con ingredientes frescos y de calidad. Desde hamburguesas jugosas hasta bebidas refrescantes, tenemos todo lo que necesitas para satisfacer tu apetito. </h4>
+                <div className="d-flex my-6 gap-3 mobile-justify-center">
                     <BtnPrimary onClick={() => navigate('/menu')}>Ver Menu</BtnPrimary>
                     <BtnSecondary onClick={() => navigate('/menu')}>Ordenar Ahora</BtnSecondary>
                 </div>
@@ -21,7 +21,7 @@ function Hero() {
                 <img src="/hamburguesa.png" alt="Hamburguesa"/>
                 <img src="/trueno.svg" id="trueno2"/>
             </div>
-            <img src="/wave2.svg" id="decoracion2"/>
+            <img src="/wave2.svg" id="decoracion2" className="mobile-hidden"/>
         </div>
     );
 }

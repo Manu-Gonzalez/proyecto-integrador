@@ -3,6 +3,8 @@
     border-radius: 5px;
     border: 1px solid #0000004d;
     font-family: inherit;
+    padding: 10px 5px;
+    width: calc(100% - 10px);
 }
 
 .input:focus {

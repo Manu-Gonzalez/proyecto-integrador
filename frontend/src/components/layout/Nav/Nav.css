@@ -1,9 +1,10 @@
 nav{
-    width: calc(100% - 2rem);
+    width: calc(100vw - 40px);
     position:sticky;
     background-color: var(--color-background);
-    z-index: 2;
+    z-index: 10000;
     top: 0;
+    overflow: visible;
 }
 
 a{
@@ -68,4 +69,45 @@ a:not(.seleccionado)::after{
     border-radius: 50%;
     top: -12px;
     right: -10px;
+}
+
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+    nav {
+        width: 100%;
+        padding: 0.5rem;
+        position: relative;
+    }
+    
+    .mobile-flex {
+        display: flex !important;
+    }
+    
+    .mobile-justify-between {
+        justify-content: space-between !important;
+    }
+    
+    a {
+        font-size: 16px;
+        padding: 0.5rem 0;
+        display: block;
+        width: 100%;
+    }
+    
+    .carrito {
+        width: 35px;
+        height: 35px;
+    }
+    
+    .carrito svg {
+        width: 20px;
+        height: 20px;
+    }
+    
+    .cantidad {
+        font-size: 12px;
+        padding: 3px 6px;
+        top: -8px;
+        right: -8px;
+    }
 }

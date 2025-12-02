@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { authMiddlewareJWT } from "@app/users/middleware";
-import { container } from "src/app";
+import { container } from "@diContainer/container";
 import { CartController } from "../../app/cart/controller";
 
 /**

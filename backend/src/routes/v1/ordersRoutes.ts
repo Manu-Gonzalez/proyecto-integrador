@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { authMiddlewareJWT } from "@app/users/middleware";
-import { container } from "src/app";
-import { OrderController } from "../../app/orders/controller";
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
 
 /**
  * @swagger
@@ -179,12 +179,54 @@ import { OrderController } from "../../app/orders/controller";
 
 export const ordersRoutes = () => {
     const router = Router();
-    const orderController = container.resolve<OrderController>("orders-controller");
 
-    router.get("/", authMiddlewareJWT, orderController.getAll);
-    router.get("/:id", authMiddlewareJWT, orderController.getById);
-    router.post("/", authMiddlewareJWT, orderController.create);
-    router.put("/:id/estado", authMiddlewareJWT, orderController.updateEstado);
+    router.post("/", async (req, res) => {
+        try {
+            const { items, mesaId, total } = req.body;
+            const userId = 1; // Mock user ID
+            
+            // Create order
+            const pedido = await prisma.pedido.create({
+                data: {
+                    usuarioId: userId,
+                    mesaId: parseInt(mesaId),
+                    total: parseFloat(total),
+                    estado: 'pendiente'
+                }
+            });
+            
+            // Create order details
+            for (const item of items) {
+                await prisma.detallePedido.create({
+                    data: {
+                        pedidoId: pedido.id,
+                        productoId: item.id,
+                        cantidad: item.quantity,
+                        subtotal: item.precio * item.quantity
+                    }
+                });
+            }
+            
+            // Update table status to occupied
+            await prisma.mesa.update({
+                where: { numero: parseInt(mesaId) },
+                data: { estado: 'ocupada' }
+            });
+            
+            res.status(201).json({ 
+                message: 'Pedido creado exitosamente',
+                pedido: {
+                    id: pedido.id,
+                    mesa: mesaId,
+                    total: total,
+                    estado: 'pendiente'
+                }
+            });
+        } catch (error: any) {
+            console.error('Error creating order:', error);
+            res.status(500).json({ error: 'Error interno del servidor' });
+        }
+    });
 
     return router;
 };

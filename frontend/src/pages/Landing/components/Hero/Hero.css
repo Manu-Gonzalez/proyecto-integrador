@@ -11,6 +11,30 @@
     background-color: var(--color-background);
 }
 
+@media (max-width: 768px) {
+    #hero {
+        height: auto;
+        min-height: 100vh;
+        padding: 1rem;
+        flex-direction: column;
+        justify-content: center;
+    }
+    
+    #texto {
+        width: 100%;
+        text-align: center;
+        order: 1;
+    }
+    
+    #producto {
+        order: 2;
+        margin: 2rem 0;
+        justify-content: center;
+    }
+    
+
+}
+
 #producto{
     position: relative;
 }
@@ -56,13 +80,12 @@
 }
 
 @media (max-width: 768px) {
-    #trueno {
-        top: 15%;
+    #trueno, #trueno2 {
+        display: none;
     }
-}
-
-@media (max-width: 480px) {
-    #trueno {
-        top: 25%;
+    
+    #producto img[alt="Hamburguesa"] {
+        width: 70vw !important;
+        max-width: none !important;
     }
 }
