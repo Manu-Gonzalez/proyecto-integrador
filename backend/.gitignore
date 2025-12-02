@@ -1,10 +1,18 @@
+# Dependencies
 node_modules
-generated
 
-.env
-!.env.template
-
+# Build
 dist
 build
-
 /generated/prisma
+
+# Environment
+.env
+.env.local
+
+# Logs
+*.log
+
+# Database
+*.db
+*.sqlite

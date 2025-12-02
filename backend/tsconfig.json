@@ -1,22 +1,29 @@
 {
   "compilerOptions": {
+    "target": "ES2020",
     "module": "commonjs",
-    "target": "es2016",
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "node",
+    "lib": ["ES2020"],
+    "outDir": "./dist",
+    "rootDir": "./src",
     "strict": true,
+    "esModuleInterop": true,
     "skipLibCheck": true,
-    "baseUrl": ".",
-    "rootDir": ".",
-    "outDir": "dist",
-    "types": ["vitest/globals"],
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "baseUrl": "./src",
     "paths": {
-      "@app/*": ["src/app/*"],
-      "@diContainer/*": ["src/diContainer/*"],
-      "@routes/*": ["src/routes/*"],
-      "@database/*": ["src/database/*"],
+      "@/*": ["*"],
+      "@app/*": ["app/*"],
+      "@config/*": ["config/*"],
+      "@shared/*": ["shared/*"],
+      "@routes/*": ["routes/*"],
+      "@diContainer/*": ["diContainer/*"]
     }
   },
-  "exclude": ["node_modules"],
-  "include": ["src", "tests"]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist", "tests"]
 }

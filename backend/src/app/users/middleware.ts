@@ -1,8 +1,8 @@
 import { verifyAccessToken } from "../../shared/utils/token"
 import CustomizedError from "../../shared/classes/CustomizedError";
-import { ExpressFunction } from "src/shared/types/ExpressFunction";
+import { Request, Response, NextFunction } from "express";
 
-export const authMiddlewareJWT: ExpressFunction = async (req, res, next) => {
+export const authMiddlewareJWT = async (req: Request, res: Response, next: NextFunction) => {
     const headerAuth = req.headers.authorization?.split(" ");
 
     if (!headerAuth) {

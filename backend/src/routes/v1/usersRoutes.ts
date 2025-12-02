@@ -1,7 +1,7 @@
 import { Router } from "express";
 import UserController from "@app/users/UserController";
 import { authMiddlewareJWT } from "@app/users/middleware";
-import { container } from "src/app";
+import { container } from "@diContainer/container";
 
 /**
  * @swagger

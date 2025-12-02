@@ -1,0 +1,37 @@
+.checkboxLabel {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    color: var(--color-fuente);
+}
+
+.checkbox {
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--color-primario);
+    border-radius: 3px;
+    cursor: pointer;
+    position: relative;
+    background-color: transparent;
+}
+
+.checkbox:checked {
+    background-color: var(--color-primario);
+}
+
+.checkbox:checked::after {
+    content: '✓';
+    position: absolute;
+    top: -2px;
+    left: 2px;
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.checkboxText {
+    color: black;
+    font-family: inherit;
+}

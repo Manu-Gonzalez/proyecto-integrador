@@ -103,7 +103,7 @@ export class PrismaOrderRepository implements OrdersRepository {
         return prisma.pedido.create({
             data: {
                 usuarioId: pedidoData.usuarioId,
-                mesaId: pedidoData.mesaId,
+                ...(pedidoData.mesaId && { mesaId: pedidoData.mesaId }),
                 total,
                 detalles: {
                     create: pedidoData.detalles.map(detalle => ({

@@ -1,13 +1,13 @@
 import UserServices from "./UserService";
-import { ExpressFunction } from "../../shared/types/ExpressFunction"
-import CustomizedError from "src/shared/classes/CustomizedError";
+import { Request, Response, NextFunction } from "express";
+import CustomizedError from "../../shared/classes/CustomizedError";
 import { UserCreate } from "./models/UserTypes";
 import bcrypt from "bcryptjs";
 
 export default class AuthController {
     constructor(private readonly UserService: UserServices) { }
 
-    public login: ExpressFunction = async (req, res, next) => {
+    public login = async (req: Request, res: Response, next: NextFunction) => {
         const { email, password } = req.body;
         try {
             const result = await this.UserService.login({ email, password });
@@ -21,7 +21,7 @@ export default class AuthController {
     }
 
 
-    public register: ExpressFunction = async (req, res, next) => {
+    public register = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const { nombre, email, password, rol }: UserCreate = req.body;
             const user: UserCreate = { nombre, email, password, rol }
@@ -33,7 +33,7 @@ export default class AuthController {
         }
     }
 
-    public logout: ExpressFunction = async (req, res, next) => {
+    public logout = async (req: Request, res: Response, next: NextFunction) => {
         try {
             res.json({ message: "Sesión cerrada" });
         } catch (error: any) {
@@ -41,7 +41,7 @@ export default class AuthController {
         }
     }
 
-    public getAll: ExpressFunction = async (req, res, next) => {
+    public getAll = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const users = await this.UserService.getAll();
             res.status(200).json(users);

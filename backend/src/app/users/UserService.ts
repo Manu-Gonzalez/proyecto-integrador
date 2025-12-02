@@ -2,7 +2,7 @@ import { User } from "./models/User";
 import { UsersRepository } from "./repositories/UserRepository";
 import { UserCreate, UserWithoutPassword } from "./models/UserTypes";
 import * as tokenFunctions from "../../shared/utils/token"
-import { prisma } from "src/config/prismaClient";
+import { prisma } from "../../config/prismaClient";
 
 export default class UserServices {
   constructor(private readonly userRepository: UsersRepository) { }

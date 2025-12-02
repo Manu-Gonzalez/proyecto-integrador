@@ -1,0 +1,91 @@
+
+
+#texto{
+    width: 550px;
+}
+
+#hero{
+    height: calc(100vh - 71px);
+    padding-left: 3.5rem;
+    padding-right: 0;
+    background-color: var(--color-background);
+}
+
+@media (max-width: 768px) {
+    #hero {
+        height: auto;
+        min-height: 100vh;
+        padding: 1rem;
+        flex-direction: column;
+        justify-content: center;
+    }
+    
+    #texto {
+        width: 100%;
+        text-align: center;
+        order: 1;
+    }
+    
+    #producto {
+        order: 2;
+        margin: 2rem 0;
+        justify-content: center;
+    }
+    
+
+}
+
+#producto{
+    position: relative;
+}
+
+#hero img {
+    max-width: 100%;
+    height: auto;
+    max-height: 100%;
+    margin-left: auto;
+}
+
+#decoracion1{
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 0;
+}
+
+#decoracion2{
+    width: 50%;
+    min-width: 500px;
+    position: absolute;
+    bottom: 0;
+    left: 10%;
+    z-index: -1;
+}
+
+#trueno{
+    position: absolute;
+    top: 5%;
+    left: -15%;
+    z-index: 1;
+    width: 40%;
+}
+
+#trueno2{
+    transform: rotate(-90deg);
+    position: absolute;
+    bottom: 5%;
+    left: -15%;
+    z-index: 1;
+    width: 40%;
+}
+
+@media (max-width: 768px) {
+    #trueno, #trueno2 {
+        display: none;
+    }
+    
+    #producto img[alt="Hamburguesa"] {
+        width: 70vw !important;
+        max-width: none !important;
+    }
+}
